@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive dashboard for the Islamabad and Rawalpindi land surface temperature and urban heat analysis project.">
+  <title>Twin Cities | Project Dashboard</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #142b43;
+      --muted: #718198;
+      --line: #e4eaf1;
+      --paper: #f5f7fb;
+      --card: #fff;
+      --navy: #10243a;
+      --blue: #287db2;
+      --cyan: #66c5d5;
+      --green: #67b58a;
+      --orange: #e6a14e;
+      --shadow: 0 12px 35px rgba(24, 48, 73, .07);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 14px/1.55 Inter, "Segoe UI", Arial, sans-serif;
+    }
+    button, input { font: inherit; }
+    a { color: inherit; }
+    .app { min-height: 100vh; }
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 4;
+      display: flex;
+      width: 246px;
+      flex-direction: column;
+      padding: 27px 18px 20px;
+      background: var(--navy);
+      color: #d7e2ee;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 0 10px 29px; }
+    .brand-mark {
+      display: grid;
+      width: 39px;
+      height: 39px;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 12px;
+      background: linear-gradient(145deg, #39a7c7, #277bb4);
+      color: white;
+      font-size: 19px;
+      font-weight: 800;
+    }
+    .brand-name { color: #fff; font-size: 13px; font-weight: 750; letter-spacing: .04em; }
+    .brand-sub { color: #8fa4ba; font-size: 10px; letter-spacing: .11em; text-transform: uppercase; }
+    .nav-label { padding: 13px 11px 8px; color: #8196ab; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .nav { display: grid; gap: 4px; }
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 11px;
+      border-radius: 9px;
+      color: #c1cfdd;
+      font-size: 13px;
+      text-decoration: none;
+      transition: background .18s ease, color .18s ease;
+    }
+    .nav a:hover, .nav a.active { background: rgba(91, 178, 210, .15); color: #fff; }
+    .nav-icon { width: 19px; color: #70bdd0; text-align: center; font-size: 15px; }
+    .side-note {
+      margin-top: auto;
+      padding: 15px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px;
+      background: rgba(255,255,255,.04);
+    }
+    .side-note strong { display: block; margin-bottom: 4px; color: #fff; font-size: 12px; }
+    .side-note span { color: #9db0c3; font-size: 11px; }
+    .main { max-width: 1680px; margin-left: 246px; padding: 29px clamp(22px, 4vw, 58px) 55px; }
+    .topline { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 27px; }
+    .breadcrumb { color: var(--muted); font-size: 12px; }
+    .breadcrumb strong { color: var(--ink); font-weight: 650; }
+    .tools { display: flex; align-items: center; gap: 10px; }
+    .search {
+      width: min(250px, 32vw);
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      outline: none;
+      background: #fff;
+      color: var(--ink);
+    }
+    .search:focus { border-color: #69b4d2; box-shadow: 0 0 0 3px rgba(61, 156, 195, .12); }
+    .period-pill { padding: 8px 12px; border: 1px solid #dce5ed; border-radius: 999px; background: #fff; color: #52677e; font-size: 11px; white-space: nowrap; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 208px;
+      padding: clamp(24px, 4vw, 43px);
+      border-radius: 19px;
+      background:
+        radial-gradient(ellipse at 86% 20%, rgba(80, 194, 215, .26), transparent 34%),
+        radial-gradient(ellipse at 75% 110%, rgba(47, 126, 181, .45), transparent 40%),
+        linear-gradient(115deg, #10243a, #174261 63%, #1c6b83);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+    .hero:after {
+      position: absolute;
+      right: -40px;
+      bottom: -180px;
+      width: 510px;
+      height: 360px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 50%;
+      box-shadow: 0 0 0 28px rgba(255,255,255,.035), 0 0 0 65px rgba(255,255,255,.025);
+      content: "";
+      transform: rotate(-18deg);
+      pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; }
+    .eyebrow { color: #9cdeeb; font-size: 10px; font-weight: 750; letter-spacing: .17em; text-transform: uppercase; }
+    h1 { margin: 9px 0 10px; font-size: clamp(26px, 3.2vw, 39px); line-height: 1.14; letter-spacing: -.035em; }
+    .hero p { max-width: 620px; margin: 0; color: #ccdae5; font-size: 13px; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 21px; }
+    .hero-tags span { padding: 5px 10px; border: 1px solid rgba(255,255,255,.17); border-radius: 99px; background: rgba(255,255,255,.07); color: #e1edf5; font-size: 10px; }
+    .section { margin-top: 34px; }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 15px; }
+    .section-heading h2 { margin: 0; font-size: 18px; letter-spacing: -.02em; }
+    .section-heading p { margin: 3px 0 0; color: var(--muted); font-size: 11px; }
+    .section-kicker { color: #3383ad; font-size: 9px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; }
+    .kpi {
+      position: relative;
+      overflow: hidden;
+      min-height: 109px;
+      padding: 17px 18px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--card);
+      box-shadow: 0 5px 18px rgba(24,48,73,.035);
+    }
+    .kpi:after { position: absolute; top: -25px; right: -20px; width: 88px; height: 88px; border-radius: 50%; background: var(--tint, #edf7fb); content: ""; }
+    .kpi-label { position: relative; z-index: 1; color: var(--muted); font-size: 11px; }
+    .kpi-value { position: relative; z-index: 1; display: block; margin: 6px 0 1px; color: var(--ink); font-size: 25px; font-weight: 760; letter-spacing: -.04em; }
+    .kpi-foot { position: relative; z-index: 1; color: #8492a2; font-size: 10px; }
+    .overview-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(270px, .75fr); gap: 14px; }
+    .panel { border: 1px solid var(--line); border-radius: 13px; background: var(--card); box-shadow: 0 5px 18px rgba(24,48,73,.035); }
+    .panel-pad { padding: 18px; }
+    .panel-title { margin: 0 0 14px; font-size: 13px; font-weight: 700; }
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .compare-table th { padding: 8px 9px; color: #77869a; font-size: 10px; font-weight: 650; text-align: right; }
+    .compare-table th:first-child, .compare-table td:first-child { text-align: left; }
+    .compare-table td { padding: 10px 9px; border-top: 1px solid #edf1f5; color: #344a60; text-align: right; }
+    .compare-table td:first-child { color: #64758a; }
+    .compare-table .down { color: #218366; font-weight: 700; }
+    .compare-table .up { color: #2681aa; font-weight: 700; }
+    .legend { display: flex; gap: 16px; margin-top: 12px; color: #7d8b9b; font-size: 10px; }
+    .legend i { display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; background: #56b5ce; }
+    .legend span + span i { background: #e6a14e; }
+    .cover-list { display: grid; gap: 12px; }
+    .cover-row { display: grid; grid-template-columns: 90px 1fr 38px; align-items: center; gap: 9px; color: #617388; font-size: 10px; }
+    .cover-track { height: 7px; overflow: hidden; border-radius: 9px; background: #edf1f5; }
+    .cover-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #39a7bf, #75cba3); }
+    .cover-value { color: #344a60; font-weight: 700; text-align: right; }
+    .note { margin-top: 13px; color: #8996a5; font-size: 10px; }
+    .gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .asset-card {
+      overflow: hidden;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 5px 18px rgba(24,48,73,.035);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .asset-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(24,48,73,.10); }
+    .asset-image {
+      display: block;
+      width: 100%;
+      height: 205px;
+      border: 0;
+      background: #edf2f7;
+      object-fit: contain;
+      cursor: zoom-in;
+    }
+    .asset-caption { display: flex; min-height: 54px; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 13px; border-top: 1px solid #edf1f5; }
+    .asset-caption strong { display: block; overflow: hidden; color: #263d54; font-size: 11px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+    .asset-caption small { display: block; margin-top: 2px; color: #8996a5; font-size: 9px; }
+    .open-link { flex: 0 0 auto; color: #3685aa; font-size: 10px; font-weight: 700; text-decoration: none; }
+    .open-link:hover { text-decoration: underline; }
+    .filter-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 13px; }
+    .filter-btn { padding: 6px 11px; border: 1px solid #dce5ed; border-radius: 99px; background: #fff; color: #62758a; cursor: pointer; font-size: 10px; }
+    .filter-btn[aria-pressed="true"] { border-color: #287db2; background: #eaf5fa; color: #1d6e98; font-weight: 700; }
+    .table-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .table-gallery .asset-image { height: 210px; }
+    .empty { display: none; padding: 28px; color: var(--muted); text-align: center; }
+    .footer { margin-top: 40px; padding-top: 17px; border-top: 1px solid var(--line); color: #8693a2; font-size: 10px; }
+    .footer a { color: #3685aa; text-decoration: none; }
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 25px;
+      background: rgba(9, 21, 34, .86);
+    }
+    .modal.open { display: flex; }
+    .modal img { max-width: min(96vw, 1500px); max-height: 88vh; border-radius: 8px; background: white; object-fit: contain; }
+    .modal-close { position: absolute; top: 17px; right: 21px; width: 39px; height: 39px; border: 1px solid rgba(255,255,255,.4); border-radius: 50%; background: transparent; color: white; cursor: pointer; font-size: 24px; }
+    @media (max-width: 1120px) {
+      .sidebar { width: 212px; }
+      .main { margin-left: 212px; }
+      .gallery, .table-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .asset-image { height: 190px; }
+      .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .sidebar { position: static; width: auto; padding: 14px 15px; }
+      .brand { padding: 0 3px 13px; }
+      .sidebar .nav-label, .side-note { display: none; }
+      .nav { display: flex; overflow-x: auto; gap: 5px; padding-bottom: 2px; }
+      .nav a { flex: 0 0 auto; padding: 8px 10px; font-size: 11px; }
+      .nav-icon { display: none; }
+      .main { margin-left: 0; padding: 18px 15px 35px; }
+      .topline { align-items: flex-start; flex-direction: column; margin-bottom: 17px; }
+      .tools { width: 100%; }
+      .search { width: 100%; }
+      .hero { min-height: 0; padding: 25px 21px; }
+      .overview-grid { grid-template-columns: 1fr; }
+      .gallery, .table-gallery { grid-template-columns: 1fr; }
+      .asset-image, .table-gallery .asset-image { height: auto; min-height: 190px; max-height: 320px; }
+      .kpis { gap: 9px; }
+      .kpi { min-height: 101px; padding: 13px; }
+      .kpi-value { font-size: 22px; }
+      .compare-table th, .compare-table td { padding: 8px 5px; font-size: 10px; }
+      .section { margin-top: 28px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *:before, *:after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">T</div>
+        <div><div class="brand-name">TWIN CITIES</div><div class="brand-sub">Climate analytics</div></div>
+      </div>
+      <div class="nav-label">Workspace</div>
+      <nav class="nav" aria-label="Dashboard sections">
+        <a class="active" href="#overview"><span class="nav-icon">◈</span>Overview</a>
+        <a href="#maps"><span class="nav-icon">▧</span>Final maps</a>
+        <a href="#charts"><span class="nav-icon">⌁</span>Charts &amp; histograms</a>
+        <a href="#tables"><span class="nav-icon">▤</span>Statistics tables</a>
+      </nav>
+      <div class="nav-label">Study</div>
+      <nav class="nav" aria-label="Study details">
+        <a href="#comparison"><span class="nav-icon">↔</span>Season comparison</a>
+        <a href="#landcover"><span class="nav-icon">◉</span>Land cover</a>
+      </nav>
+      <div class="side-note"><strong>Islamabad · Rawalpindi</strong><span>Pre-monsoon and post-monsoon, 2025</span></div>
+    </aside>
+
+    <main class="main">
+      <div class="topline">
+        <div class="breadcrumb">Twin Cities <span aria-hidden="true">/</span> <strong>Project dashboard</strong></div>
+        <div class="tools">
+          <input class="search" id="search" type="search" placeholder="Search maps, charts, tables..." aria-label="Search dashboard outputs">
+          <span class="period-pill">MAY — OCT 2025</span>
+        </div>
+      </div>
+
+      <section class="hero" id="overview">
+        <div class="hero-content">
+          <div class="eyebrow">Remote sensing · Urban heat · Land cover</div>
+          <h1>Islamabad &amp; Rawalpindi<br>Urban Climate Dashboard</h1>
+          <p>Explore land surface temperature, spectral indices, land-cover classification and thermal stress across Pakistan's twin cities.</p>
+          <div class="hero-tags"><span>Landsat 8/9</span><span>Sentinel-2</span><span>30 m analysis</span><span>Pre vs post monsoon</span></div>
+        </div>
+      </section>
+
+      <section class="section" aria-label="Project highlights">
+        <div class="kpis">
+          <article class="kpi" style="--tint:#e7f5fa"><span class="kpi-label">Study area</span><strong class="kpi-value">6,119 km²</strong><span class="kpi-foot">Islamabad + Rawalpindi</span></article>
+          <article class="kpi" style="--tint:#e8f6ef"><span class="kpi-label">Mean LST change</span><strong class="kpi-value">−11.21 °C</strong><span class="kpi-foot">Post minus pre-monsoon</span></article>
+          <article class="kpi" style="--tint:#fff3e5"><span class="kpi-label">Overall classification accuracy</span><strong class="kpi-value">91.5%</strong><span class="kpi-foot">Kappa 0.893 · 10,000 test samples</span></article>
+          <article class="kpi" style="--tint:#edf0fb"><span class="kpi-label">Vegetation cover</span><strong class="kpi-value">42.3%</strong><span class="kpi-foot">Largest mapped land-cover class</span></article>
+        </div>
+      </section>
+
+      <section class="section" id="comparison">
+        <div class="section-heading">
+          <div><div class="section-kicker">At a glance</div><h2>Seasonal comparison</h2><p>Project-wide mean values, calculated from the statistics tables.</p></div>
+        </div>
+        <div class="overview-grid">
+          <article class="panel panel-pad">
+            <h3 class="panel-title">Pre-monsoon vs post-monsoon</h3>
+            <table class="compare-table">
+              <thead><tr><th>Indicator</th><th>Pre-monsoon</th><th>Post-monsoon</th><th>Change</th></tr></thead>
+              <tbody>
+                <tr><td>Mean LST</td><td>43.62 °C</td><td>32.41 °C</td><td class="down">−11.21 °C</td></tr>
+                <tr><td>Mean NDVI</td><td>0.290</td><td>0.460</td><td class="up">+0.170</td></tr>
+                <tr><td>Mean NDBI</td><td>0.037</td><td>−0.064</td><td class="down">−0.101</td></tr>
+                <tr><td>Mean NDWI</td><td>−0.360</td><td>−0.481</td><td>−0.121</td></tr>
+              </tbody>
+            </table>
+            <div class="legend"><span><i></i>Pre-monsoon</span><span><i></i>Post-monsoon</span></div>
+          </article>
+          <article class="panel panel-pad" id="landcover">
+            <h3 class="panel-title">Land-cover composition</h3>
+            <div class="cover-list">
+              <div class="cover-row"><span>Vegetation</span><div class="cover-track"><div class="cover-fill" style="width:42.3%"></div></div><span class="cover-value">42.3%</span></div>
+              <div class="cover-row"><span>Agriculture</span><div class="cover-track"><div class="cover-fill" style="width:34.1%;background:linear-gradient(90deg,#d9ab4c,#edce77)"></div></div><span class="cover-value">34.1%</span></div>
+              <div class="cover-row"><span>Built-up</span><div class="cover-track"><div class="cover-fill" style="width:14.7%;background:linear-gradient(90deg,#dd796e,#e99c78)"></div></div><span class="cover-value">14.7%</span></div>
+              <div class="cover-row"><span>Bare land</span><div class="cover-track"><div class="cover-fill" style="width:7.5%;background:#a6b0bd"></div></div><span class="cover-value">7.5%</span></div>
+              <div class="cover-row"><span>Water</span><div class="cover-track"><div class="cover-fill" style="width:1.4%;min-width:5px;background:#629ed0"></div></div><span class="cover-value">1.4%</span></div>
+            </div>
+            <div class="note">Share of total classified area · 6,119 km²</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="maps">
+        <div class="section-heading"><div><div class="section-kicker">Spatial outputs</div><h2>Final maps</h2><p>Click any map to view it at full size.</p></div><span class="period-pill">12 MAPS</span></div>
+        <div class="gallery" id="map-gallery"></div>
+        <div class="empty" id="maps-empty">No maps match your search.</div>
+      </section>
+
+      <section class="section" id="charts">
+        <div class="section-heading"><div><div class="section-kicker">Analysis &amp; validation</div><h2>Charts and histograms</h2><p>Seasonal distributions, relationships, classification and validation results.</p></div><span class="period-pill">16 CHARTS</span></div>
+        <div class="filter-row" role="group" aria-label="Filter charts by season">
+          <button class="filter-btn" data-chart-filter="all" aria-pressed="true">All charts</button>
+          <button class="filter-btn" data-chart-filter="pre" aria-pressed="false">Pre-monsoon</button>
+          <button class="filter-btn" data-chart-filter="post" aria-pressed="false">Post-monsoon</button>
+          <button class="filter-btn" data-chart-filter="other" aria-pressed="false">Other analysis</button>
+        </div>
+        <div class="gallery" id="chart-gallery"></div>
+        <div class="empty" id="charts-empty">No charts match your search.</div>
+      </section>
+
+      <section class="section" id="tables">
+        <div class="section-heading"><div><div class="section-kicker">Reference outputs</div><h2>Statistics tables</h2><p>Preview a table or open its PNG/CSV file.</p></div><span class="period-pill">17 TABLES</span></div>
+        <div class="gallery table-gallery" id="table-gallery"></div>
+        <div class="empty" id="tables-empty">No tables match your search.</div>
+      </section>
+
+      <footer class="footer">Twin Cities remote-sensing project · Dashboard is a local HTML file and uses the project's existing output files. <a href="07_Statistics/Tables/">Browse statistics files</a></footer>
+    </main>
+  </div>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Image preview">
+    <button class="modal-close" id="modal-close" type="button" aria-label="Close preview">&times;</button>
+    <img id="modal-image" alt="">
+  </div>
+
+  <script>
+    const maps = [
+      ["LST · Pre-monsoon", "Temperature map", "Map1_LST_pre.png"],
+      ["LST · Post-monsoon", "Temperature map", "Map1_LST_post.png"],
+      ["NDVI · Pre-monsoon", "Vegetation index", "Map2_NDVI_pre.png"],
+      ["NDVI · Post-monsoon", "Vegetation index", "Map2_NDVI_post.png"],
+      ["NDBI · Pre vs post", "Built-up index comparison", "Map3_NDBI_pre_vs_post.png"],
+      ["NDWI · Pre-monsoon", "Water index", "Map4_NDWI_pre.png"],
+      ["NDWI · Post-monsoon", "Water index", "Map4_NDWI_post.png"],
+      ["Random Forest land cover", "Land-cover classification", "Map5_Land_cover_RF.png"],
+      ["Thermal stress · Pre-monsoon", "UTSI thermal stress", "Map6_Thermal_Stress_pre.png"],
+      ["Thermal stress · Post-monsoon", "UTSI thermal stress", "Map6_Thermal_Stress_post.png"],
+      ["LST difference", "Seasonal change map", "Map7_dLST.png"],
+      ["NDVI difference", "Seasonal change map", "Map8_dNDVI.png"]
+    ];
+    const charts = [
+      ["LST, NDVI & NDBI histograms · Pre", "Distributions", "Chart1_histograms_pre.png", "pre"],
+      ["LST, NDVI & NDBI histograms · Post", "Distributions", "Chart1_histograms_post.png", "post"],
+      ["NDVI vs LST · Pre-monsoon", "Index relationship", "Chart2_NDVI_vs_LST_pre.png", "pre"],
+      ["NDVI vs LST · Post-monsoon", "Index relationship", "Chart2_NDVI_vs_LST_post.png", "post"],
+      ["Land-cover area", "Classified area", "Chart3_landcover_area.png", "other"],
+      ["Correlation · Pre-monsoon", "Pearson and Spearman", "Chart4_correlation_pre.png", "pre"],
+      ["Correlation · Post-monsoon", "Pearson and Spearman", "Chart4_correlation_post.png", "post"],
+      ["Seasonal LST boxplots", "Seasonal comparison", "Chart5_seasonal_boxplots.png", "other"],
+      ["Feature importance", "Random Forest model", "Chart6_feature_importance.png", "other"],
+      ["LST by land cover", "Thermal characteristics", "Chart7_LST_by_landcover.png", "other"],
+      ["UTSI sensitivity", "Sensitivity analysis", "Chart8_UTSI_sensitivity.png", "other"],
+      ["City LST boxplot", "Islamabad vs Rawalpindi", "Chart9_city_LST_boxplot.png", "other"],
+      ["City land-cover comparison", "Islamabad vs Rawalpindi", "Chart10_city_landcover.png", "other"],
+      ["Landsat vs MODIS", "Temperature validation", "Chart11_Landsat_vs_MODIS.png", "other"],
+      ["Pre-monsoon histograms", "Histogram export", "../07_Statistics/Histograms/Histogram_pre_monsoon.png", "pre"],
+      ["Post-monsoon histograms", "Histogram export", "../07_Statistics/Histograms/Histogram_post_monsoon.png", "post"]
+    ];
+    const tables = [
+      ["Feature importance", "Model predictors", "Feature_importance"],
+      ["Table 1 · Datasets", "Data sources and resolution", "Table1_datasets"],
+      ["Table 2 · Image acquisition", "Sensors, dates and scenes", "Table2_image_acquisition"],
+      ["Tables 3–4 · Statistics", "Spectral and thermal summary", "Table3_4_statistics"],
+      ["Table 5 · Land-cover area", "Area and share by class", "Table5_landcover_area"],
+      ["Table 6 · Accuracy", "Classification validation", "Table6_accuracy"],
+      ["Table 7 · Correlation", "Index correlation with LST", "Table7_correlation"],
+      ["Table 8 · City comparison", "Islamabad vs Rawalpindi", "Table8_Islamabad_vs_Rawalpindi"],
+      ["Critical hotspots", "Thermal hotspot area", "Table_critical_hotspots"],
+      ["Filter noise reduction", "Image processing summary", "Table_filter_noise_reduction"],
+      ["LST by land cover", "Temperature by class", "Table_LST_by_landcover"],
+      ["LST by land cover and city", "City-level temperature", "Table_LST_by_landcover_by_city"],
+      ["MODIS validation", "Satellite cross-validation", "Table_MODIS_validation"],
+      ["Seasonal change", "Pre/post difference metrics", "Table_seasonal_change"],
+      ["UTSI by land cover", "Stress by land-cover class", "Table_UTSI_by_landcover"],
+      ["UTSI classes", "Thermal stress distribution", "Table_UTSI_classes"],
+      ["UTSI sensitivity", "Weight sensitivity results", "Table_UTSI_sensitivity"]
+    ];
+
+    const esc = value => String(value).replace(/[&<>"']/g, char => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    })[char]);
+    function assetCard(title, subtitle, image, category, csvName) {
+      const source = category === "map"
+        ? `08_Final_Maps/${image}`
+        : category === "chart"
+          ? `09_Charts/${image}`
+          : `07_Statistics/Tables/${image}.png`;
+      const csv = csvName ? `<a class="open-link" href="07_Statistics/Tables/${esc(csvName)}.csv">CSV ↗</a>` : "";
+      const search = `${title} ${subtitle} ${image} ${csvName || ""}`.toLowerCase();
+      return `<article class="asset-card" data-search="${esc(search)}" ${category === "chart" ? `data-season="${esc(csvName)}"` : ""}>
+        <img class="asset-image" src="${esc(source)}" alt="${esc(title)}" loading="lazy" data-preview="${esc(source)}">
+        <div class="asset-caption"><div><strong title="${esc(title)}">${esc(title)}</strong><small>${esc(subtitle)}</small></div>
+        <div style="display:flex;gap:10px;align-items:center"><a class="open-link" href="${esc(source)}" target="_blank" rel="noopener">PNG ↗</a>${csv}</div></div>
+      </article>`;
+    }
+    document.getElementById("map-gallery").innerHTML = maps.map(item => assetCard(item[0], item[1], item[2], "map")).join("");
+    document.getElementById("chart-gallery").innerHTML = charts.map(item => assetCard(item[0], item[1], item[2], "chart", item[3])).join("");
+    document.getElementById("table-gallery").innerHTML = tables.map(item => assetCard(item[0], item[1], item[2], "table", `${item[2]}`)).join("");
+
+    const search = document.getElementById("search");
+    let activeChartFilter = "all";
+    function filterCards() {
+      const query = search.value.trim().toLowerCase();
+      for (const [galleryId, emptyId, kind] of [
+        ["map-gallery", "maps-empty", "map"],
+        ["chart-gallery", "charts-empty", "chart"],
+        ["table-gallery", "tables-empty", "table"]
+      ]) {
+        const cards = [...document.querySelectorAll(`#${galleryId} .asset-card`)];
+        let visible = 0;
+        for (const card of cards) {
+          const matchesQuery = !query || card.dataset.search.includes(query);
+          const matchesSeason = kind !== "chart" || activeChartFilter === "all" || card.dataset.season === activeChartFilter;
+          const show = matchesQuery && matchesSeason;
+          card.hidden = !show;
+          if (show) visible++;
+        }
+        document.getElementById(emptyId).style.display = visible ? "none" : "block";
+      }
+    }
+    search.addEventListener("input", filterCards);
+    document.querySelectorAll("[data-chart-filter]").forEach(button => {
+      button.addEventListener("click", () => {
+        activeChartFilter = button.dataset.chartFilter;
+        document.querySelectorAll("[data-chart-filter]").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+        filterCards();
+      });
+    });
+
+    const modal = document.getElementById("modal");
+    const modalImage = document.getElementById("modal-image");
+    function closeModal() {
+      modal.classList.remove("open");
+      modalImage.src = "";
+    }
+    document.addEventListener("click", event => {
+      const image = event.target.closest("[data-preview]");
+      if (image) {
+        modalImage.src = image.dataset.preview;
+        modalImage.alt = image.alt;
+        modal.classList.add("open");
+      }
+    });
+    document.getElementById("modal-close").addEventListener("click", closeModal);
+    modal.addEventListener("click", event => { if (event.target === modal) closeModal(); });
+    document.addEventListener("keydown", event => { if (event.key === "Escape") closeModal(); });
+
+    const navLinks = [...document.querySelectorAll(".nav a[href^='#']")];
+    const sections = navLinks.map(link => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(entries => {
+        const current = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (current) navLinks.forEach(link => link.classList.toggle("active", link.hash === `#${current.target.id}`));
+      }, { rootMargin: "-15% 0px -70% 0px", threshold: [0, .2, .5] });
+      sections.forEach(section => observer.observe(section));
+    }
+  </script>
+</body>
+</html>

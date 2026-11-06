@@ -1,0 +1,7 @@
+Season,Index,Pearson_vs_LST,Spearman_vs_LST,R2
+pre,NDVI,-0.703,-0.686,0.495
+pre,NDBI,0.79,0.686,0.625
+pre,NDWI,0.576,0.619,0.332
+post,NDVI,-0.677,-0.725,0.458
+post,NDBI,0.761,0.766,0.579
+post,NDWI,0.563,0.696,0.318

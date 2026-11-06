@@ -1,0 +1,8 @@
+Class,Producers_accuracy,Users_accuracy,F1,Test_samples
+Built-up,0.934,0.932,0.933,2000.0
+Vegetation,0.9,0.912,0.906,2000.0
+Agriculture,0.868,0.846,0.856,2000.0
+Water,0.984,0.995,0.989,2000.0
+Bare land,0.888,0.892,0.89,2000.0
+Overall accuracy,0.915,,,10000.0
+Kappa,0.893,,,

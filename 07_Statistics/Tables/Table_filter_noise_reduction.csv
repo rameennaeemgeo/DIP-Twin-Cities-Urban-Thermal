@@ -1,0 +1,7 @@
+Layer,Version,Roughness_std_of_neighbour_difference
+LST (deg C),Original,0.3039
+LST (deg C),Median filter 3x3,0.2762
+LST (deg C),"Gaussian filter, sigma = 1",0.2402
+NDVI,Original,0.0925
+NDVI,Median filter 3x3,0.0488
+NDVI,"Gaussian filter, sigma = 1",0.0327

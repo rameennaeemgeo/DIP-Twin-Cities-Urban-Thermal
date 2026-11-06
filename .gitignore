@@ -1,0 +1,6 @@
+﻿02_Raw_Data/
+*.tif
+*.tiff
+__pycache__/
+*.pyc
+~$*

@@ -1,0 +1,21 @@
+Season,City,Land_cover,Mean_LST_C,Pixels
+pre,Islamabad,Built-up,43.81,357241
+pre,Islamabad,Vegetation,41.13,388943
+pre,Islamabad,Agriculture,45.59,169763
+pre,Islamabad,Water,37.84,13059
+pre,Islamabad,Bare land,45.81,65951
+pre,Rawalpindi,Built-up,43.87,645771
+pre,Rawalpindi,Vegetation,40.42,2486414
+pre,Rawalpindi,Agriculture,46.85,2147785
+pre,Rawalpindi,Water,38.47,83759
+pre,Rawalpindi,Bare land,47.65,440614
+post,Islamabad,Built-up,33.17,357237
+post,Islamabad,Vegetation,28.97,388943
+post,Islamabad,Agriculture,34.27,169763
+post,Islamabad,Water,28.97,13058
+post,Islamabad,Bare land,34.68,65951
+post,Rawalpindi,Built-up,33.38,645766
+post,Rawalpindi,Vegetation,28.96,2486414
+post,Rawalpindi,Agriculture,35.84,2147785
+post,Rawalpindi,Water,29.57,83759
+post,Rawalpindi,Bare land,35.75,440610

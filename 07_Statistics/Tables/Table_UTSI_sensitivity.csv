@@ -1,0 +1,11 @@
+Season,Weights,Top20pct_hotspot_overlap_with_baseline_pct,Spearman_vs_baseline
+pre,Baseline 0.5/0.3/0.2,100.0,1.0
+pre,LST-heavy 0.6/0.2/0.2,93.6,0.995
+pre,Equal 0.33/0.33/0.34,89.1,0.99
+pre,Vegetation-heavy 0.4/0.4/0.2,92.5,0.995
+pre,Built-up-heavy 0.4/0.2/0.4,90.0,0.991
+post,Baseline 0.5/0.3/0.2,100.0,1.0
+post,LST-heavy 0.6/0.2/0.2,94.0,0.996
+post,Equal 0.33/0.33/0.34,92.6,0.994
+post,Vegetation-heavy 0.4/0.4/0.2,94.4,0.997
+post,Built-up-heavy 0.4/0.2/0.4,95.1,0.997

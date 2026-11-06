@@ -1,0 +1,7 @@
+Dataset,Earth_Engine_ID,Purpose,Resolution,Period
+Landsat 8 C2 L2,LANDSAT/LC08/C02/T1_L2,"Surface temperature (ST_B10), surface reflectance",30 m,May-Oct 2025
+Landsat 9 C2 L2,LANDSAT/LC09/C02/T1_L2,"Surface temperature (ST_B10), surface reflectance",30 m,May-Oct 2025
+Sentinel-2 SR Harmonized,COPERNICUS/S2_SR_HARMONIZED,"NDVI, NDBI, NDWI, spectral features",10-20 m (aggregated to 30 m),May-Oct 2025
+ESA WorldCover v200,ESA/WorldCover/v200,Reference labels for classification,10 m (aggregated to 30 m),2021
+Dynamic World V1,GOOGLE/DYNAMICWORLD/V1,Reference labels for classification,10 m (aggregated to 30 m),May-Oct 2025
+FAO GAUL 2015 level 2,FAO/GAUL/2015/level2,District boundaries (study area),Vector,2015

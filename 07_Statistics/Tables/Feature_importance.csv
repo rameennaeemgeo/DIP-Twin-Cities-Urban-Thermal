@@ -1,0 +1,17 @@
+Feature,Importance
+NDWI_post,0.1227
+swir1_post,0.1122
+blue_post,0.0968
+nir_post,0.0942
+swir1_pre,0.0758
+red_post,0.0721
+NDVI_post,0.0657
+red_pre,0.0631
+blue_pre,0.0602
+green_post,0.0531
+nir_pre,0.0407
+NDVI_pre,0.0376
+NDWI_pre,0.03
+green_pre,0.03
+NDBI_post,0.0261
+NDBI_pre,0.0198
