@@ -10,6 +10,15 @@ A multi-sensor digital image processing project for the Islamabad–Rawalpindi T
 - **Periods:** pre-monsoon (May–June 2025) and post-monsoon (September–October 2025)
 - **Data:** Landsat 8/9 Collection 2 Level-2, Sentinel-2 SR Harmonized, ESA WorldCover v200, Dynamic World, MODIS MOD11A2
 - **Grid:** 30 m, UTM Zone 43N (EPSG:32643)
+cd C:\DIP_Project\DIP_Twin_Cities_Project
+$url = "https://rameennaeemgeo.github.io/DIP-Twin-Cities-Urban-Thermal/"
+$lines = Get-Content README.md
+$new = @($lines[0], "", "**Live dashboard:** [$url]($url)", "") + $lines[1..($lines.Count-1)]
+$new | Set-Content -Encoding UTF8 README.md
+git add README.md
+git commit -m "Add live dashboard link to README"
+git push
+gh repo edit rameennaeemgeo/DIP-Twin-Cities-Urban-Thermal --homepage $url --description "Urban thermal environment and vegetation analysis of Islamabad-Rawalpindi using Landsat, Sentinel-2 and Google Earth Engine"
 
 ## Methods
 
