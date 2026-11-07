@@ -1,8 +1,18 @@
-﻿# Urban Thermal Environment and Vegetation Dynamics in Islamabad–Rawalpindi
+# Urban Thermal Environment and Vegetation Dynamics in Islamabad–Rawalpindi
 
 A multi-sensor digital image processing project for the Islamabad–Rawalpindi Twin Cities (Pakistan), using Landsat 8/9 and Sentinel-2 imagery, Google Earth Engine and Python. It was prepared as a final project for the course Advanced Digital Image Processing.
 
 **Research question:** How do vegetation, built-up surfaces and land-cover patterns influence the spatial distribution of land surface temperature (LST) in Islamabad and Rawalpindi?
+
+## Live Dashboard
+
+**[Open the live dashboard](https://rameennaeemgeo.github.io/DIP-Twin-Cities-Urban-Thermal/)**
+
+`https://rameennaeemgeo.github.io/DIP-Twin-Cities-Urban-Thermal/`
+
+The dashboard is an interactive page for browsing the results of this project: summary indicators, final maps, charts and histograms, statistics tables, a season comparison and land cover. It runs in any web browser and needs no installation.
+
+The page is large (about 25 MB, because the images are embedded in it), so the first load can take 10–20 seconds.
 
 ## Study design
 
@@ -10,15 +20,6 @@ A multi-sensor digital image processing project for the Islamabad–Rawalpindi T
 - **Periods:** pre-monsoon (May–June 2025) and post-monsoon (September–October 2025)
 - **Data:** Landsat 8/9 Collection 2 Level-2, Sentinel-2 SR Harmonized, ESA WorldCover v200, Dynamic World, MODIS MOD11A2
 - **Grid:** 30 m, UTM Zone 43N (EPSG:32643)
-cd C:\DIP_Project\DIP_Twin_Cities_Project
-$url = "https://rameennaeemgeo.github.io/DIP-Twin-Cities-Urban-Thermal/"
-$lines = Get-Content README.md
-$new = @($lines[0], "", "**Live dashboard:** [$url]($url)", "") + $lines[1..($lines.Count-1)]
-$new | Set-Content -Encoding UTF8 README.md
-git add README.md
-git commit -m "Add live dashboard link to README"
-git push
-gh repo edit rameennaeemgeo/DIP-Twin-Cities-Urban-Thermal --homepage $url --description "Urban thermal environment and vegetation analysis of Islamabad-Rawalpindi using Landsat, Sentinel-2 and Google Earth Engine"
 
 ## Methods
 
@@ -37,8 +38,23 @@ Cloud masking, radiometric scaling and median compositing; contrast stretching, 
 
 The highest thermal stress is found mainly on dry agricultural and bare land of the southern plain. Built-up land has almost the same mean LST in the two districts, so most of the difference between Islamabad and Rawalpindi comes from land-cover mix.
 
+## Maps
+
+**Land surface temperature (°C)**
+
+| Pre-monsoon (May–June 2025) | Post-monsoon (September–October 2025) |
+|---|---|
+| ![LST pre-monsoon](08_Final_Maps/Map1_LST_pre.png) | ![LST post-monsoon](08_Final_Maps/Map1_LST_post.png) |
+
+**Urban Thermal Stress zones (relative classes)**
+
+| Pre-monsoon (May–June 2025) | Post-monsoon (September–October 2025) |
+|---|---|
+| ![Thermal stress pre-monsoon](08_Final_Maps/Map6_Thermal_Stress_pre.png) | ![Thermal stress post-monsoon](08_Final_Maps/Map6_Thermal_Stress_post.png) |
+
+**Land cover (Random Forest, 30 m)**
+
 ![Land cover](08_Final_Maps/Map5_Land_cover_RF.png)
-![Thermal stress, pre-monsoon](08_Final_Maps/Map6_Thermal_Stress_pre.png)
 
 ## Repository structure
 
@@ -48,6 +64,7 @@ The highest thermal stress is found mainly on dry agricultural and bare land of 
 - `06_Classification/`, `05_Thermal_Analysis/`, `01_Study_Area/` – classification outputs, thermal stress outputs and district boundaries
 - `10_Research_Report/` – project report
 - `Dashboard.html` – interactive dashboard of the results
+- `index.html` – copy of the dashboard, used by GitHub Pages for the live link
 
 ## Reproduce
 
