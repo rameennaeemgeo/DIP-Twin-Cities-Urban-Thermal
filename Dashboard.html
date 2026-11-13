@@ -193,6 +193,10 @@
     .cover-value { color: #344a60; font-weight: 700; text-align: right; }
     .note { margin-top: 13px; color: #8996a5; font-size: 10px; }
     .gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .workflow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .workflow-card { display: flex; min-width: 0; min-height: 126px; flex-direction: column; justify-content: space-between; gap: 18px; padding: 15px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); }
+    .workflow-card h3 { margin: 4px 0 0; color: var(--ink); font-size: 12px; }
+    .workflow-links { display: flex; flex-wrap: wrap; gap: 12px; }
     .asset-card {
       overflow: hidden;
       min-width: 0;
@@ -284,6 +288,7 @@
         <a class="active" href="#overview"><span class="nav-icon">◈</span>Overview</a>
         <a href="#maps"><span class="nav-icon">▧</span>Final maps</a>
         <a href="#enhanced"><span class="nav-icon">✦</span>Enhanced images</a>
+        <a href="#processing"><span class="nav-icon">⚙</span>Processing workflows</a>
         <a href="#charts"><span class="nav-icon">⌁</span>Charts &amp; histograms</a>
         <a href="#tables"><span class="nav-icon">▤</span>Statistics tables</a>
       </nav>
@@ -369,6 +374,17 @@
         <div class="section-heading"><div><div class="section-kicker">Image processing</div><h2>Enhanced images</h2><p>Contrast and histogram enhancement, false-colour composites, filters, and threshold morphology. Open any image in its own window.</p></div><span class="period-pill">4 IMAGES</span></div>
         <div class="gallery" id="enhanced-gallery"></div>
         <div class="empty" id="enhanced-empty">No enhanced images match your search.</div>
+      </section>
+
+      <section class="section" id="processing">
+        <div class="section-heading"><div><div class="section-kicker">Processing pipeline</div><h2>Processing workflows</h2><p>Scripts for seasonal composites, spectral indices and land surface temperature.</p></div><span class="period-pill">7 SCRIPTS</span></div>
+        <div class="workflow-grid">
+          <article class="workflow-card"><div><div class="section-kicker">Preprocessing</div><h3>Cloud masking &amp; seasonal composites</h3></div><div class="workflow-links"><a class="open-link" href="03_Preprocessed_Images/Cloud_Masked/cloud_masking.py" target="_blank" rel="noopener">Mask helper ↗</a><a class="open-link" href="03_Preprocessed_Images/Seasonal_Composites/build_seasonal_composites.py" target="_blank" rel="noopener">Build composites ↗</a><a class="open-link" href="#maps">Results ↗</a></div></article>
+          <article class="workflow-card"><div><div class="section-kicker">Vegetation</div><h3>NDVI</h3></div><div class="workflow-links"><a class="open-link" href="04_Spectral_Indices/NDVI/process_ndvi.py" target="_blank" rel="noopener">Open script ↗</a><a class="open-link" href="#maps">Maps ↗</a></div></article>
+          <article class="workflow-card"><div><div class="section-kicker">Built-up surface</div><h3>NDBI</h3></div><div class="workflow-links"><a class="open-link" href="04_Spectral_Indices/NDBI/process_ndbi.py" target="_blank" rel="noopener">Open script ↗</a><a class="open-link" href="#maps">Maps ↗</a></div></article>
+          <article class="workflow-card"><div><div class="section-kicker">Water content</div><h3>NDWI</h3></div><div class="workflow-links"><a class="open-link" href="04_Spectral_Indices/NDWI/process_ndwi.py" target="_blank" rel="noopener">Open script ↗</a><a class="open-link" href="#maps">Maps ↗</a></div></article>
+          <article class="workflow-card"><div><div class="section-kicker">Thermal analysis</div><h3>Land surface temperature</h3></div><div class="workflow-links"><a class="open-link" href="05_Thermal_Analysis/LST/build_lst_composites.py" target="_blank" rel="noopener">Export LST ↗</a><a class="open-link" href="05_Thermal_Analysis/LST/analyze_lst.py" target="_blank" rel="noopener">Analyze LST ↗</a><a class="open-link" href="#maps">Maps ↗</a></div></article>
+        </div>
       </section>
 
       <section class="section" id="charts">
